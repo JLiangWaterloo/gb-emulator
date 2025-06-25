@@ -1,4 +1,4 @@
-struct FlagsRegister {
+pub struct FlagsRegister {
     zero: bool,
     subtract: bool,
     half_carry: bool,
