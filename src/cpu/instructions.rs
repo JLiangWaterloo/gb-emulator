@@ -1,5 +1,6 @@
 pub enum Instruction {
   ADD(ArithmeticTarget),
+  BIT(u8, BitSource),
   LD(LoadTarget, LoadSource),
   LDN16(LoadTypeN16),
   XOR(ArithmeticTarget, ArithmeticSource),
@@ -11,6 +12,10 @@ pub enum ArithmeticTarget {
 
 pub enum ArithmeticSource {
   A, B, C, D, E, H, L, HLI
+}
+
+pub enum BitSource {
+	H
 }
 
 pub enum LoadTarget {
@@ -36,6 +41,7 @@ impl Instruction {
 
   fn from_byte_prefixed(byte: u8) -> Option<Instruction> {
     match byte {
+      0x7c => Some(Instruction::BIT(7, BitSource::H)),
       _ => /* TODO: Add mapping for rest of instructions */ None
     }
   }

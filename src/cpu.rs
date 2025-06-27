@@ -3,6 +3,7 @@ pub mod instructions;
 pub mod memory_bus;
 pub mod registers;
 
+use flag_registers::FlagsRegister;
 use instructions::Instruction;
 use memory_bus::MemoryBus;
 use registers::Registers;
@@ -11,6 +12,7 @@ pub struct CPU {
   registers: Registers,
   sp: u16,
   pc: u16,
+  flags_register: FlagsRegister,
   bus: MemoryBus,
 }
 
@@ -34,6 +36,16 @@ impl CPU {
   
   fn execute(&mut self, instruction: Instruction) -> u16 {
     match instruction {
+    	Instruction::BIT(number, source) => {
+    		let source_value = match source {
+            instructions::BitSource::H => self.registers.h,
+            _ => { panic!("TODO: implement other sources") }
+          };
+        self.flags_register.zero = (source_value << number) & 1 == 0;
+        self.flags_register.subtract = false;
+        self.flags_register.half_carry = true;
+        self.pc + 2
+    	}
     	Instruction::LD(target, source) => {
     		let source_value = match source {
             instructions::LoadSource::A => self.registers.a,
@@ -43,6 +55,7 @@ impl CPU {
             instructions::LoadTarget::HLD => {
             	let hl = self.registers.get_hl();
             	self.bus.write_byte(hl, source_value);
+            	println!("Setting {:x}={}", hl, source_value);
             	self.registers.set_hl(hl - 1);
             }
             _ => { panic!("TODO: implement other targets") }
@@ -90,6 +103,7 @@ impl Default for CPU {
   fn default() -> Self {
   	Self {
   		registers: Registers::default(),
+  		flags_register: FlagsRegister::default(),
   		sp: 0,
   		pc: 0,
   		bus: MemoryBus::default(),

@@ -5,7 +5,7 @@ pub struct Registers {
   d: u8,
   e: u8,
   f: u8,
-  h: u8,
+  pub h: u8,
   l: u8,
 }
 

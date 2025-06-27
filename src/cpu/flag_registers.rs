@@ -1,7 +1,7 @@
 pub struct FlagsRegister {
-    zero: bool,
-    subtract: bool,
-    half_carry: bool,
+  pub zero: bool,
+  pub subtract: bool,
+  pub half_carry: bool,
     carry: bool
 }
 
@@ -33,4 +33,10 @@ impl std::convert::From<u8> for FlagsRegister {
             carry
         }
     }
+}
+
+impl Default for FlagsRegister {
+	fn default() -> Self {
+		Self { zero: false, subtract: false, half_carry: false, carry: false }
+	}
 }
