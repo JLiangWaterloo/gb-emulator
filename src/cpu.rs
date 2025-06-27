@@ -34,6 +34,21 @@ impl CPU {
   
   fn execute(&mut self, instruction: Instruction) -> u16 {
     match instruction {
+    	Instruction::LD(target, source) => {
+    		let source_value = match source {
+            instructions::LoadSource::A => self.registers.a,
+            _ => { panic!("TODO: implement other sources") }
+          };
+          match target {
+            instructions::LoadTarget::HLD => {
+            	let hl = self.registers.get_hl();
+            	self.bus.write_byte(hl, source_value);
+            	self.registers.set_hl(hl - 1);
+            }
+            _ => { panic!("TODO: implement other targets") }
+          };
+          self.pc + 1
+    	}
     	Instruction::LDN16(target) => {
     		let least_significant_byte = self.bus.read_byte(self.pc + 1) as u16;
       	let most_significant_byte = self.bus.read_byte(self.pc + 2) as u16;

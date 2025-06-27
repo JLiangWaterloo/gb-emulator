@@ -20,6 +20,11 @@ impl Registers {
     self.c = (value & 0xFF) as u8;
   }
   
+  pub fn get_hl(&self) -> u16 {
+    (self.h as u16) << 8
+    | self.l as u16
+  }
+  
   pub fn set_hl(&mut self, value: u16) {
     self.h = ((value & 0xFF00) >> 8) as u8;
     self.l = (value & 0xFF) as u8;

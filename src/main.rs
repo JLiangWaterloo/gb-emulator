@@ -10,4 +10,5 @@ fn main() {
   cpu.step();
   cpu.step();
   cpu.step();
+  cpu.step();
 }

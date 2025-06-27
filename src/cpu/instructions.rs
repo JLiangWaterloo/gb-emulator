@@ -1,5 +1,6 @@
 pub enum Instruction {
   ADD(ArithmeticTarget),
+  LD(LoadTarget, LoadSource),
   LDN16(LoadTypeN16),
   XOR(ArithmeticTarget, ArithmeticSource),
 }
@@ -10,6 +11,14 @@ pub enum ArithmeticTarget {
 
 pub enum ArithmeticSource {
   A, B, C, D, E, H, L, HLI
+}
+
+pub enum LoadTarget {
+	HLD
+}
+
+pub enum LoadSource {
+	A
 }
 
 pub enum LoadTypeN16 {
@@ -35,6 +44,7 @@ impl Instruction {
     match byte {
     	0x21 => Some(Instruction::LDN16(LoadTypeN16::HL)),
     	0x31 => Some(Instruction::LDN16(LoadTypeN16::SP)),
+    	0x32 => Some(Instruction::LD(LoadTarget::HLD, LoadSource::A)),
     	0xAF => Some(Instruction::XOR(ArithmeticTarget::A, ArithmeticSource::A)),
       _ => /* TODO: Add mapping for rest of instructions */ None
     }
