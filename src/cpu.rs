@@ -23,7 +23,7 @@ impl CPU {
     if prefixed {
       instruction_byte = self.bus.read_byte(self.pc + 1);
     }
-		println!("Running instruction {:x}", instruction_byte);
+		println!("Running instruction {:x} @ {}", instruction_byte, self.pc);
     let next_pc = if let Some(instruction) = Instruction::from_byte(instruction_byte, prefixed) {
       self.execute(instruction)
     } else {
@@ -54,7 +54,7 @@ impl CPU {
     		if condition_value {
     			let distance = self.bus.read_signed_byte(self.pc + 1);
     			println!("Jumping {}", distance);
-    			self.pc.wrapping_add_signed(distance.into())
+    			self.pc.wrapping_add(2).wrapping_add_signed(distance.into())
     		} else {
     			println!("Not jumping");
     			self.pc.wrapping_add(2)
