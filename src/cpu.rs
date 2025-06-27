@@ -9,6 +9,7 @@ use registers::Registers;
 
 pub struct CPU {
   registers: Registers,
+  sp: u16,
   pc: u16,
   bus: MemoryBus,
 }
@@ -33,6 +34,19 @@ impl CPU {
   
   fn execute(&mut self, instruction: Instruction) -> u16 {
     match instruction {
+    	Instruction::LDN16(target) => {
+    		let least_significant_byte = self.bus.read_byte(self.pc + 1) as u16;
+      	let most_significant_byte = self.bus.read_byte(self.pc + 2) as u16;
+      	let value = (most_significant_byte << 8) | least_significant_byte;
+    	
+    		match target {
+    			instructions::LoadTypeN16::SP => {
+    				self.sp = value;
+    				self.pc + 3
+    			}
+    			_ => { panic!("Unknown target."); }
+    		}
+    	}
       _ => { /* TODO: support more instructions */ self.pc }
     }
   }
@@ -46,6 +60,7 @@ impl Default for CPU {
   fn default() -> Self {
   	Self {
   		registers: Registers::default(),
+  		sp: 0,
   		pc: 0,
   		bus: MemoryBus::default(),
   	}
