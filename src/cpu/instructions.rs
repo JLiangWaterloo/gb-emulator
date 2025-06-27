@@ -13,7 +13,7 @@ pub enum ArithmeticSource {
 }
 
 pub enum LoadTypeN16 {
-	SP
+	SP, HL
 }
 
 impl Instruction {
@@ -33,6 +33,7 @@ impl Instruction {
 
   fn from_byte_not_prefixed(byte: u8) -> Option<Instruction> {
     match byte {
+    	0x21 => Some(Instruction::LDN16(LoadTypeN16::HL)),
     	0x31 => Some(Instruction::LDN16(LoadTypeN16::SP)),
     	0xAF => Some(Instruction::XOR(ArithmeticTarget::A, ArithmeticSource::A)),
       _ => /* TODO: Add mapping for rest of instructions */ None

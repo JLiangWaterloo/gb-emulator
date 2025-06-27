@@ -44,6 +44,10 @@ impl CPU {
     				self.sp = value;
     				self.pc + 3
     			}
+    			instructions::LoadTypeN16::HL => {
+    				self.registers.set_hl(value);
+    				self.pc + 3
+    			}
     			_ => { panic!("Unknown target."); }
     		}
     	}
