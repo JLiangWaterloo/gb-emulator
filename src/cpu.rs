@@ -41,7 +41,7 @@ impl CPU {
             instructions::BitSource::H => self.registers.h,
             _ => { panic!("TODO: implement other sources") }
           };
-        self.flags_register.zero = (source_value << number) & 1 == 0;
+        self.flags_register.zero = (source_value >> number) & 1 == 0;
         self.flags_register.subtract = false;
         self.flags_register.half_carry = true;
         self.pc + 2
