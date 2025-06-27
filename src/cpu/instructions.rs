@@ -1,6 +1,7 @@
 pub enum Instruction {
   ADD(ArithmeticTarget),
   BIT(u8, BitSource),
+  JR(JumpCondition),
   LD(LoadTarget, LoadSource),
   LDN16(LoadTypeN16),
   XOR(ArithmeticTarget, ArithmeticSource),
@@ -16,6 +17,10 @@ pub enum ArithmeticSource {
 
 pub enum BitSource {
 	H
+}
+
+pub enum JumpCondition {
+	NZ
 }
 
 pub enum LoadTarget {
@@ -48,6 +53,7 @@ impl Instruction {
 
   fn from_byte_not_prefixed(byte: u8) -> Option<Instruction> {
     match byte {
+    	0x20 => Some(Instruction::JR(JumpCondition::NZ)),
     	0x21 => Some(Instruction::LDN16(LoadTypeN16::HL)),
     	0x31 => Some(Instruction::LDN16(LoadTypeN16::SP)),
     	0x32 => Some(Instruction::LD(LoadTarget::HLD, LoadSource::A)),

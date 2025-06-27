@@ -7,6 +7,10 @@ impl MemoryBus {
     self.memory[address as usize]
   }
   
+  pub fn read_signed_byte(&self, address: u16) -> i8 {
+    self.memory[address as usize] as i8
+  }
+  
   pub fn write_byte(&mut self, address: u16, value: u8) {
   	self.memory[address as usize] = value;
   }

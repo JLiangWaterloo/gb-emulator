@@ -46,6 +46,20 @@ impl CPU {
         self.flags_register.half_carry = true;
         self.pc + 2
     	}
+    	Instruction::JR(condition) => {
+    		let condition_value = match condition {
+    				instructions::JumpCondition::NZ => !self.flags_register.zero,
+            _ => { panic!("TODO: implement other sources") }
+    		};
+    		if condition_value {
+    			let distance = self.bus.read_signed_byte(self.pc + 1);
+    			println!("Jumping {}", distance);
+    			self.pc.wrapping_add_signed(distance.into())
+    		} else {
+    			println!("Not jumping");
+    			self.pc.wrapping_add(2)
+    		}
+    	}
     	Instruction::LD(target, source) => {
     		let source_value = match source {
             instructions::LoadSource::A => self.registers.a,
