@@ -1,5 +1,5 @@
 pub struct Registers {
-  a: u8,
+  pub a: u8,
   b: u8,
   c: u8,
   d: u8,

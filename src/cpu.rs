@@ -21,7 +21,7 @@ impl CPU {
     if prefixed {
       instruction_byte = self.bus.read_byte(self.pc + 1);
     }
-
+		println!("Running instruction {:x}", instruction_byte);
     let next_pc = if let Some(instruction) = Instruction::from_byte(instruction_byte, prefixed) {
       self.execute(instruction)
     } else {
@@ -46,6 +46,17 @@ impl CPU {
     			}
     			_ => { panic!("Unknown target."); }
     		}
+    	}
+    	Instruction::XOR(target, source) => {
+    		let source_value = match source {
+            instructions::ArithmeticSource::A => self.registers.a,
+            _ => { panic!("TODO: implement other sources") }
+          };
+          match target {
+            instructions::ArithmeticTarget::A => self.registers.a ^= source_value,
+            _ => { panic!("TODO: implement other targets") }
+          };
+          self.pc + 1
     	}
       _ => { /* TODO: support more instructions */ self.pc }
     }

@@ -8,4 +8,5 @@ fn main() {
   cpu.load_bootstrap(&DMG_BOOT);
   
   cpu.step();
+  cpu.step();
 }
