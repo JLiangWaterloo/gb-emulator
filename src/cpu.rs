@@ -7,14 +7,14 @@ use instructions::Instruction;
 use memory_bus::MemoryBus;
 use registers::Registers;
 
-struct CPU {
+pub struct CPU {
   registers: Registers,
   pc: u16,
   bus: MemoryBus,
 }
 
 impl CPU {
-  fn step(&mut self) {
+  pub fn step(&mut self) {
     let mut instruction_byte = self.bus.read_byte(self.pc);
     let prefixed = instruction_byte == 0xCB;
     if prefixed {
@@ -35,5 +35,19 @@ impl CPU {
     match instruction {
       _ => { /* TODO: support more instructions */ self.pc }
     }
+  }
+  
+  pub fn load_bootstrap(&mut self, bootstrap_bin: &[u8]) {
+  	self.bus.write_array(0, bootstrap_bin);
+  }
+}
+
+impl Default for CPU {
+  fn default() -> Self {
+  	Self {
+  		registers: Registers::default(),
+  		pc: 0,
+  		bus: MemoryBus::default(),
+  	}
   }
 }
