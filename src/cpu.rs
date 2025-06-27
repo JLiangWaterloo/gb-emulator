@@ -61,11 +61,20 @@ impl CPU {
     		}
     	}
     	Instruction::LD(target, source) => {
+    	  let mut skip = 1;
     		let source_value = match source {
             instructions::LoadSource::A => self.registers.a,
+            instructions::LoadSource::N8 => {
+            	skip += 1;
+            	self.bus.read_byte(self.pc + 1)
+            }
             _ => { panic!("TODO: implement other sources") }
           };
           match target {
+          	instructions::LoadTarget::C=> {
+          		println!("Setting c={}", source_value);
+          		self.registers.c = source_value;
+          	}
             instructions::LoadTarget::HLD => {
             	let hl = self.registers.get_hl();
             	self.bus.write_byte(hl, source_value);
@@ -74,7 +83,7 @@ impl CPU {
             }
             _ => { panic!("TODO: implement other targets") }
           };
-          self.pc + 1
+          self.pc + skip
     	}
     	Instruction::LDN16(target) => {
     		let least_significant_byte = self.bus.read_byte(self.pc + 1) as u16;

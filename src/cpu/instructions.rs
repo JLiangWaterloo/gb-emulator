@@ -24,11 +24,11 @@ pub enum JumpCondition {
 }
 
 pub enum LoadTarget {
-	HLD
+	C, HLD
 }
 
 pub enum LoadSource {
-	A
+	A, N8
 }
 
 pub enum LoadTypeN16 {
@@ -53,6 +53,7 @@ impl Instruction {
 
   fn from_byte_not_prefixed(byte: u8) -> Option<Instruction> {
     match byte {
+    	0xe => Some(Instruction::LD(LoadTarget::C, LoadSource::N8)),
     	0x20 => Some(Instruction::JR(JumpCondition::NZ)),
     	0x21 => Some(Instruction::LDN16(LoadTypeN16::HL)),
     	0x31 => Some(Instruction::LDN16(LoadTypeN16::SP)),
