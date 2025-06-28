@@ -3,6 +3,7 @@ pub enum Instruction {
   BIT(u8, BitSource),
   JR(JumpCondition),
   LD(LoadTarget, LoadSource),
+  LDH(LoadHTarget, LoadHSource),
   LDN16(LoadTypeN16),
   XOR(ArithmeticTarget, ArithmeticSource),
 }
@@ -29,6 +30,14 @@ pub enum LoadTarget {
 
 pub enum LoadSource {
 	A, N8
+}
+
+pub enum LoadHTarget {
+	C_ 
+}
+
+pub enum LoadHSource {
+	A
 }
 
 pub enum LoadTypeN16 {
@@ -60,6 +69,7 @@ impl Instruction {
     	0x32 => Some(Instruction::LD(LoadTarget::HLD, LoadSource::A)),
     	0x3e => Some(Instruction::LD(LoadTarget::A, LoadSource::N8)),
     	0xAF => Some(Instruction::XOR(ArithmeticTarget::A, ArithmeticSource::A)),
+    	0xe2 => Some(Instruction::LDH(LoadHTarget::C_, LoadHSource::A)),
       _ => /* TODO: Add mapping for rest of instructions */ None
     }
   }

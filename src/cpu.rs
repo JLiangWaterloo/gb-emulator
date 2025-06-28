@@ -88,6 +88,19 @@ impl CPU {
             _ => { panic!("TODO: implement other targets") }
           };
     	}
+    	Instruction::LDH(target, source) => {
+    		let source_value = match source {
+            instructions::LoadHSource::A => self.registers.a,
+            _ => { panic!("TODO: implement other sources") }
+          };
+          match target {
+          	instructions::LoadHTarget::C_=> {
+          		println!("LDH 0xff{:x}={}", self.registers.c, source_value);
+          		self.bus.write_byte(0xff00 + (self.registers.c as u16), source_value);
+          	}
+            _ => { panic!("TODO: implement other targets") }
+          };
+    	}
     	Instruction::LDN16(target) => {
     		let least_significant_byte = self.bus.read_byte(self.pc) as u16;
       	let most_significant_byte = self.bus.read_byte(self.pc + 1) as u16;
