@@ -45,6 +45,17 @@ impl CPU {
         self.flags_register.subtract = false;
         self.flags_register.half_carry = true;
     	}
+    	Instruction::INC(target) => {
+    		match target {
+          	instructions::IncTarget::C => {
+	          	self.registers.c = self.registers.c.wrapping_add(1);
+          		self.flags_register.zero = self.registers.c == 0;
+        			self.flags_register.subtract = false;
+        			self.flags_register.half_carry = self.registers.c == 0x10;
+          	}
+            _ => { panic!("TODO: implement other targets") }
+        };
+    	}
     	Instruction::JR(condition) => {
     		let condition_value = match condition {
     				instructions::JumpCondition::NZ => !self.flags_register.zero,

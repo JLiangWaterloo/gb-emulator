@@ -1,6 +1,7 @@
 pub enum Instruction {
   ADD(ArithmeticTarget),
   BIT(u8, BitSource),
+  INC(IncTarget),
   JR(JumpCondition),
   LD(LoadTarget, LoadSource),
   LDH(LoadHTarget, LoadHSource),
@@ -18,6 +19,10 @@ pub enum ArithmeticSource {
 
 pub enum BitSource {
 	H
+}
+
+pub enum IncTarget {
+	C
 }
 
 pub enum JumpCondition {
@@ -62,6 +67,7 @@ impl Instruction {
 
   fn from_byte_not_prefixed(byte: u8) -> Option<Instruction> {
     match byte {
+    	0xc => Some(Instruction::INC(IncTarget::C)),
     	0xe => Some(Instruction::LD(LoadTarget::C, LoadSource::N8)),
     	0x20 => Some(Instruction::JR(JumpCondition::NZ)),
     	0x21 => Some(Instruction::LDN16(LoadTypeN16::HL)),
