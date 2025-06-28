@@ -19,22 +19,22 @@ pub struct CPU {
 impl CPU {
   pub fn step(&mut self) {
     let mut instruction_byte = self.bus.read_byte(self.pc);
+    self.pc = self.pc.wrapping_add(1);
     let prefixed = instruction_byte == 0xCB;
     if prefixed {
-      instruction_byte = self.bus.read_byte(self.pc + 1);
+      instruction_byte = self.bus.read_byte(self.pc);
+    	self.pc = self.pc.wrapping_add(1);
     }
 		println!("Running instruction {:x} @ {}", instruction_byte, self.pc);
-    let next_pc = if let Some(instruction) = Instruction::from_byte(instruction_byte, prefixed) {
+    if let Some(instruction) = Instruction::from_byte(instruction_byte, prefixed) {
       self.execute(instruction)
     } else {
       let description = format!("0x{}{:x}", if prefixed { "cb" } else { "" }, instruction_byte);
       panic!("Unkown instruction found for: {}", description)
     };
-
-    self.pc = next_pc;
   }
   
-  fn execute(&mut self, instruction: Instruction) -> u16 {
+  fn execute(&mut self, instruction: Instruction) {
     match instruction {
     	Instruction::BIT(number, source) => {
     		let source_value = match source {
@@ -44,7 +44,6 @@ impl CPU {
         self.flags_register.zero = (source_value >> number) & 1 == 0;
         self.flags_register.subtract = false;
         self.flags_register.half_carry = true;
-        self.pc + 2
     	}
     	Instruction::JR(condition) => {
     		let condition_value = match condition {
@@ -52,21 +51,22 @@ impl CPU {
             _ => { panic!("TODO: implement other sources") }
     		};
     		if condition_value {
-    			let distance = self.bus.read_signed_byte(self.pc + 1);
+    			let distance = self.bus.read_signed_byte(self.pc);
     			println!("Jumping {}", distance);
-    			self.pc.wrapping_add(2).wrapping_add_signed(distance.into())
+    			self.pc = self.pc.wrapping_add(1).wrapping_add_signed(distance.into());
     		} else {
     			println!("Not jumping");
-    			self.pc.wrapping_add(2)
+    			// Optimization: skip reading the next byte since we are not jumping, still need to update pc counter though.
+    			self.pc = self.pc.wrapping_add(1);
     		}
     	}
     	Instruction::LD(target, source) => {
-    	  let mut skip = 1;
     		let source_value = match source {
             instructions::LoadSource::A => self.registers.a,
             instructions::LoadSource::N8 => {
-            	skip += 1;
-            	self.bus.read_byte(self.pc + 1)
+            	let old_pc = self.pc;
+    					self.pc = self.pc.wrapping_add(1);
+    					self.bus.read_byte(old_pc)
             }
             _ => { panic!("TODO: implement other sources") }
           };
@@ -83,21 +83,19 @@ impl CPU {
             }
             _ => { panic!("TODO: implement other targets") }
           };
-          self.pc + skip
     	}
     	Instruction::LDN16(target) => {
-    		let least_significant_byte = self.bus.read_byte(self.pc + 1) as u16;
-      	let most_significant_byte = self.bus.read_byte(self.pc + 2) as u16;
+    		let least_significant_byte = self.bus.read_byte(self.pc) as u16;
+      	let most_significant_byte = self.bus.read_byte(self.pc + 1) as u16;
       	let value = (most_significant_byte << 8) | least_significant_byte;
+      	self.pc = self.pc.wrapping_add(2);
     	
     		match target {
     			instructions::LoadTypeN16::SP => {
     				self.sp = value;
-    				self.pc + 3
     			}
     			instructions::LoadTypeN16::HL => {
     				self.registers.set_hl(value);
-    				self.pc + 3
     			}
     			_ => { panic!("Unknown target."); }
     		}
@@ -111,9 +109,8 @@ impl CPU {
             instructions::ArithmeticTarget::A => self.registers.a ^= source_value,
             _ => { panic!("TODO: implement other targets") }
           };
-          self.pc + 1
     	}
-      _ => { /* TODO: support more instructions */ self.pc }
+      _ => {}
     }
   }
   
