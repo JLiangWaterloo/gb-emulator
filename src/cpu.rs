@@ -71,6 +71,10 @@ impl CPU {
             _ => { panic!("TODO: implement other sources") }
           };
           match target {
+          	instructions::LoadTarget::A=> {
+          		println!("Setting a={}", source_value);
+          		self.registers.a = source_value;
+          	}
           	instructions::LoadTarget::C=> {
           		println!("Setting c={}", source_value);
           		self.registers.c = source_value;
