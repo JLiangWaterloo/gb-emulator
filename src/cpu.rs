@@ -90,6 +90,11 @@ impl CPU {
           		println!("Setting c={}", source_value);
           		self.registers.c = source_value;
           	}
+          	instructions::LoadTarget::HL_ => {
+          		let hl = self.registers.get_hl();
+            	self.bus.write_byte(hl, source_value);
+            	println!("Setting {:x}={}", hl, source_value);
+          	}
             instructions::LoadTarget::HLD => {
             	let hl = self.registers.get_hl();
             	self.bus.write_byte(hl, source_value);

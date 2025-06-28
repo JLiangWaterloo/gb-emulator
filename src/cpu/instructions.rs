@@ -30,7 +30,7 @@ pub enum JumpCondition {
 }
 
 pub enum LoadTarget {
-	A, C, HLD
+	A, C, HL_, HLD
 }
 
 pub enum LoadSource {
@@ -74,6 +74,7 @@ impl Instruction {
     	0x31 => Some(Instruction::LDN16(LoadTypeN16::SP)),
     	0x32 => Some(Instruction::LD(LoadTarget::HLD, LoadSource::A)),
     	0x3e => Some(Instruction::LD(LoadTarget::A, LoadSource::N8)),
+    	0x77 => Some(Instruction::LD(LoadTarget::HL_, LoadSource::A)),
     	0xAF => Some(Instruction::XOR(ArithmeticTarget::A, ArithmeticSource::A)),
     	0xe2 => Some(Instruction::LDH(LoadHTarget::C_, LoadHSource::A)),
       _ => /* TODO: Add mapping for rest of instructions */ None
