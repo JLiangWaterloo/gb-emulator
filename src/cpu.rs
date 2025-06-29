@@ -149,6 +149,9 @@ impl CPU {
                 self.pc = self.pc.wrapping_add(2);
 
                 match target {
+                		instructions::LoadTypeN16::DE => {
+												self.registers.set_de(value);
+                		}
                     instructions::LoadTypeN16::SP => {
                         self.sp = value;
                     }

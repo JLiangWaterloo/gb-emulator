@@ -63,6 +63,7 @@ pub enum LoadHSource {
 }
 
 pub enum LoadTypeN16 {
+		DE,
     SP,
     HL,
 }
@@ -91,6 +92,7 @@ impl Instruction {
         match byte {
             0xc => Some(Instruction::INC(IncTarget::C)),
             0xe => Some(Instruction::LD(LoadTarget::C, LoadSource::N8)),
+            0x11 => Some(Instruction::LDN16(LoadTypeN16::DE)),
             0x20 => Some(Instruction::JR(JumpCondition::NZ)),
             0x21 => Some(Instruction::LDN16(LoadTypeN16::HL)),
             0x31 => Some(Instruction::LDN16(LoadTypeN16::SP)),
