@@ -131,6 +131,12 @@ impl CPU {
                         self.bus
                             .write_byte(0xff00 + (self.registers.c as u16), source_value);
                     }
+                    instructions::LoadHTarget::N8_ => {
+                        let n8 = self.bus.read_byte(self.pc);
+                    		println!("LDH 0xff{:x}={}", n8, source_value);
+                        self.bus.write_byte(0xff00 + (n8 as u16), source_value);
+                        self.pc = self.pc.wrapping_add(1);
+                    }
                     _ => {
                         panic!("TODO: implement other targets")
                     }

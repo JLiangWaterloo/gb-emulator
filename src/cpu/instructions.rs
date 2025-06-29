@@ -55,7 +55,7 @@ pub enum LoadSource {
 }
 
 pub enum LoadHTarget {
-    C_,
+    C_, N8_,
 }
 
 pub enum LoadHSource {
@@ -98,6 +98,7 @@ impl Instruction {
             0x3e => Some(Instruction::LD(LoadTarget::A, LoadSource::N8)),
             0x77 => Some(Instruction::LD(LoadTarget::HL_, LoadSource::A)),
             0xAF => Some(Instruction::XOR(ArithmeticTarget::A, ArithmeticSource::A)),
+            0xe0 => Some(Instruction::LDH(LoadHTarget::N8_, LoadHSource::A)),
             0xe2 => Some(Instruction::LDH(LoadHTarget::C_, LoadHSource::A)),
             _ =>
             /* TODO: Add mapping for rest of instructions */
