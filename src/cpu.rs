@@ -34,7 +34,7 @@ impl CPU {
                 if prefixed { "cb" } else { "" },
                 instruction_byte
             );
-            panic!("Unkown instruction found for: {}", description)
+            panic!("Unknown instruction found for: {}", description)
         };
     }
 
