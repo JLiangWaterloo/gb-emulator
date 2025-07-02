@@ -18,6 +18,7 @@ pub struct CPU {
 
 impl CPU {
     pub fn step(&mut self) {
+    	let old_pc = self.pc;
         let mut instruction_byte = self.bus.read_byte(self.pc);
         self.pc = self.pc.wrapping_add(1);
         let prefixed = instruction_byte == 0xCB;
@@ -25,7 +26,7 @@ impl CPU {
             instruction_byte = self.bus.read_byte(self.pc);
             self.pc = self.pc.wrapping_add(1);
         }
-        println!("Running instruction {:x} @ {}", instruction_byte, self.pc);
+        println!("Running instruction {:x} @ {}", instruction_byte, old_pc);
         if let Some(instruction) = Instruction::from_byte(instruction_byte, prefixed) {
             self.execute(instruction)
         } else {
@@ -50,6 +51,19 @@ impl CPU {
                 self.flags_register.zero = (source_value >> number) & 1 == 0;
                 self.flags_register.subtract = false;
                 self.flags_register.half_carry = true;
+            }
+            Instruction::CALL => {
+            	self.sp = self.sp.wrapping_sub(1);
+            	self.bus.write_byte(self.sp, (self.pc >> 8) as u8);
+            	self.sp = self.sp.wrapping_sub(1);
+            	self.bus.write_byte(self.sp, (self.pc & 0xff) as u8);
+            	
+            	let least_significant_byte = self.bus.read_byte(self.pc) as u16;
+                let most_significant_byte = self.bus.read_byte(self.pc + 1) as u16;
+                let value = (most_significant_byte << 8) | least_significant_byte;
+                
+                println!("Calling 0x{:x}", value);
+                self.pc = value;
             }
             Instruction::INC(target) => {
                 match target {

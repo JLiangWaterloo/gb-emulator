@@ -1,6 +1,7 @@
 pub enum Instruction {
     ADD(ArithmeticTarget),
     BIT(u8, BitSource),
+    CALL,
     INC(IncTarget),
     JR(JumpCondition),
     LD(LoadTarget, LoadSource),
@@ -102,6 +103,7 @@ impl Instruction {
             0x3e => Some(Instruction::LD(LoadTarget::A, LoadSource::N8)),
             0x77 => Some(Instruction::LD(LoadTarget::HL_, LoadSource::A)),
             0xAF => Some(Instruction::XOR(ArithmeticTarget::A, ArithmeticSource::A)),
+            0xcd => Some(Instruction::CALL),
             0xe0 => Some(Instruction::LDH(LoadHTarget::N8_, LoadHSource::A)),
             0xe2 => Some(Instruction::LDH(LoadHTarget::C_, LoadHSource::A)),
             _ =>
