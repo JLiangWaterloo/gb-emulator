@@ -7,6 +7,7 @@ pub enum Instruction {
     LD(LoadTarget, LoadSource),
     LDH(LoadHTarget, LoadHSource),
     LDN16(LoadTypeN16),
+    PUSH(PushTarget),
     XOR(ArithmeticTarget, ArithmeticSource),
 }
 
@@ -71,6 +72,10 @@ pub enum LoadTypeN16 {
     HL,
 }
 
+pub enum PushTarget {
+    BC,
+}
+
 impl Instruction {
     pub fn from_byte(byte: u8, prefixed: bool) -> Option<Instruction> {
         if prefixed {
@@ -106,6 +111,7 @@ impl Instruction {
             0x4f => Some(Instruction::LD(LoadTarget::C, LoadSource::A)),
             0x77 => Some(Instruction::LD(LoadTarget::HL_, LoadSource::A)),
             0xAF => Some(Instruction::XOR(ArithmeticTarget::A, ArithmeticSource::A)),
+            0xc5 => Some(Instruction::PUSH(PushTarget::BC)),
             0xcd => Some(Instruction::CALL),
             0xe0 => Some(Instruction::LDH(LoadHTarget::N8_, LoadHSource::A)),
             0xe2 => Some(Instruction::LDH(LoadHTarget::C_, LoadHSource::A)),

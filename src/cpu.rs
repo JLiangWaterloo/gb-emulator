@@ -182,6 +182,19 @@ impl CPU {
                     }
                 }
             }
+            Instruction::PUSH(target) => {
+            	match target {
+                    instructions::PushTarget::BC => {
+					    self.sp = self.sp.wrapping_sub(1);
+					    self.bus.write_byte(self.sp, self.registers.b);
+					    self.sp = self.sp.wrapping_sub(1);
+					    self.bus.write_byte(self.sp, self.registers.c);
+                	}
+                    _ => {
+                        panic!("Unknown target.");
+                    }
+                }
+            }
             Instruction::XOR(target, source) => {
                 let source_value = match source {
                     instructions::ArithmeticSource::A => self.registers.a,
