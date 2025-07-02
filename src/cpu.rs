@@ -113,6 +113,10 @@ impl CPU {
                         println!("Setting a={}", source_value);
                         self.registers.a = source_value;
                     }
+                    instructions::LoadTarget::B => {
+                        println!("Setting b={}", source_value);
+                        self.registers.b = source_value;
+                    }
                     instructions::LoadTarget::C => {
                         println!("Setting c={}", source_value);
                         self.registers.c = source_value;

@@ -1,6 +1,6 @@
 pub struct Registers {
     pub a: u8,
-    b: u8,
+    pub b: u8,
     pub c: u8,
     d: u8,
     e: u8,
