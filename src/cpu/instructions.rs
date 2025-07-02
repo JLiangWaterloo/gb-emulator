@@ -59,7 +59,8 @@ pub enum LoadSource {
 }
 
 pub enum LoadHTarget {
-    C_, N8_,
+    C_,
+    N8_,
 }
 
 pub enum LoadHSource {
@@ -67,7 +68,7 @@ pub enum LoadHSource {
 }
 
 pub enum LoadTypeN16 {
-		DE,
+    DE,
     SP,
     HL,
 }
@@ -98,7 +99,7 @@ impl Instruction {
 
     fn from_byte_not_prefixed(byte: u8) -> Option<Instruction> {
         match byte {
-        	0x6 => Some(Instruction::LD(LoadTarget::B, LoadSource::N8)),
+            0x6 => Some(Instruction::LD(LoadTarget::B, LoadSource::N8)),
             0xc => Some(Instruction::INC(IncTarget::C)),
             0xe => Some(Instruction::LD(LoadTarget::C, LoadSource::N8)),
             0x11 => Some(Instruction::LDN16(LoadTypeN16::DE)),

@@ -18,7 +18,7 @@ pub struct CPU {
 
 impl CPU {
     pub fn step(&mut self) {
-    	let old_pc = self.pc;
+        let old_pc = self.pc;
         let mut instruction_byte = self.bus.read_byte(self.pc);
         self.pc = self.pc.wrapping_add(1);
         let prefixed = instruction_byte == 0xCB;
@@ -53,15 +53,15 @@ impl CPU {
                 self.flags_register.half_carry = true;
             }
             Instruction::CALL => {
-            	self.sp = self.sp.wrapping_sub(1);
-            	self.bus.write_byte(self.sp, (self.pc >> 8) as u8);
-            	self.sp = self.sp.wrapping_sub(1);
-            	self.bus.write_byte(self.sp, (self.pc & 0xff) as u8);
-            	
-            	let least_significant_byte = self.bus.read_byte(self.pc) as u16;
+                self.sp = self.sp.wrapping_sub(1);
+                self.bus.write_byte(self.sp, (self.pc >> 8) as u8);
+                self.sp = self.sp.wrapping_sub(1);
+                self.bus.write_byte(self.sp, (self.pc & 0xff) as u8);
+
+                let least_significant_byte = self.bus.read_byte(self.pc) as u16;
                 let most_significant_byte = self.bus.read_byte(self.pc + 1) as u16;
                 let value = (most_significant_byte << 8) | least_significant_byte;
-                
+
                 println!("Calling 0x{:x}", value);
                 self.pc = value;
             }
@@ -152,7 +152,7 @@ impl CPU {
                     }
                     instructions::LoadHTarget::N8_ => {
                         let n8 = self.bus.read_byte(self.pc);
-                    		println!("LDH 0xff{:x}={}", n8, source_value);
+                        println!("LDH 0xff{:x}={}", n8, source_value);
                         self.bus.write_byte(0xff00 + (n8 as u16), source_value);
                         self.pc = self.pc.wrapping_add(1);
                     }
@@ -168,9 +168,9 @@ impl CPU {
                 self.pc = self.pc.wrapping_add(2);
 
                 match target {
-                		instructions::LoadTypeN16::DE => {
-												self.registers.set_de(value);
-                		}
+                    instructions::LoadTypeN16::DE => {
+                        self.registers.set_de(value);
+                    }
                     instructions::LoadTypeN16::SP => {
                         self.sp = value;
                     }
@@ -182,19 +182,17 @@ impl CPU {
                     }
                 }
             }
-            Instruction::PUSH(target) => {
-            	match target {
-                    instructions::PushTarget::BC => {
-					    self.sp = self.sp.wrapping_sub(1);
-					    self.bus.write_byte(self.sp, self.registers.b);
-					    self.sp = self.sp.wrapping_sub(1);
-					    self.bus.write_byte(self.sp, self.registers.c);
-                	}
-                    _ => {
-                        panic!("Unknown target.");
-                    }
+            Instruction::PUSH(target) => match target {
+                instructions::PushTarget::BC => {
+                    self.sp = self.sp.wrapping_sub(1);
+                    self.bus.write_byte(self.sp, self.registers.b);
+                    self.sp = self.sp.wrapping_sub(1);
+                    self.bus.write_byte(self.sp, self.registers.c);
                 }
-            }
+                _ => {
+                    panic!("Unknown target.");
+                }
+            },
             Instruction::XOR(target, source) => {
                 let source_value = match source {
                     instructions::ArithmeticSource::A => self.registers.a,
