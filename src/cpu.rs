@@ -145,6 +145,12 @@ impl CPU {
                         println!("Setting {:x}={}", hl, source_value);
                         self.registers.set_hl(hl - 1);
                     }
+                    instructions::LoadTarget::HLI => {
+                        let hl = self.registers.get_hl();
+                        self.bus.write_byte(hl, source_value);
+                        println!("Setting {:x}={}", hl, source_value);
+                        self.registers.set_hl(hl + 1);
+                    }
                     _ => {
                         panic!("TODO: implement other targets")
                     }

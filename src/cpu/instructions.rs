@@ -58,6 +58,7 @@ pub enum LoadTarget {
     C,
     HL_,
     HLD,
+    HLI,
 }
 
 pub enum LoadSource {
@@ -125,6 +126,7 @@ impl Instruction {
             0x1a => Some(Instruction::LD(LoadTarget::A, LoadSource::DE_)),
             0x20 => Some(Instruction::JR(JumpCondition::NZ)),
             0x21 => Some(Instruction::LDN16(LoadTypeN16::HL)),
+            0x22 => Some(Instruction::LD(LoadTarget::HLI, LoadSource::A)),
             0x31 => Some(Instruction::LDN16(LoadTypeN16::SP)),
             0x32 => Some(Instruction::LD(LoadTarget::HLD, LoadSource::A)),
             0x3e => Some(Instruction::LD(LoadTarget::A, LoadSource::N8)),
