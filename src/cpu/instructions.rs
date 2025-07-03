@@ -2,6 +2,7 @@ pub enum Instruction {
     ADD(ArithmeticTarget),
     BIT(u8, BitSource),
     CALL,
+    DEC(DecrementTarget),
     INC(IncTarget),
     JR(JumpCondition),
     LD(LoadTarget, LoadSource),
@@ -37,6 +38,10 @@ pub enum ArithmeticSource {
 
 pub enum BitSource {
     H,
+}
+
+pub enum DecrementTarget {
+    B,
 }
 
 pub enum IncTarget {
@@ -111,6 +116,7 @@ impl Instruction {
 
     fn from_byte_not_prefixed(byte: u8) -> Option<Instruction> {
         match byte {
+            0x5 => Some(Instruction::DEC(DecrementTarget::B)),
             0x6 => Some(Instruction::LD(LoadTarget::B, LoadSource::N8)),
             0xc => Some(Instruction::INC(IncTarget::C)),
             0xe => Some(Instruction::LD(LoadTarget::C, LoadSource::N8)),

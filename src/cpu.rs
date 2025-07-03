@@ -65,6 +65,19 @@ impl CPU {
                 println!("Calling 0x{:x}", value);
                 self.pc = value;
             }
+            Instruction::DEC(target) => {
+                match target {
+                    instructions::DecrementTarget::B => {
+                        self.flags_register.half_carry = self.registers.b == 0;
+                        self.registers.b = self.registers.b.wrapping_sub(1);
+                        self.flags_register.zero = self.registers.b == 0;
+                        self.flags_register.subtract = true;
+                    }
+                    _ => {
+                        panic!("TODO: implement other targets")
+                    }
+                };
+            }
             Instruction::INC(target) => {
                 match target {
                     instructions::IncTarget::C => {
