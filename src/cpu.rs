@@ -86,6 +86,10 @@ impl CPU {
                         self.flags_register.subtract = false;
                         self.flags_register.half_carry = self.registers.c == 0x10;
                     }
+                    instructions::IncTarget::HL => {
+                        let hl = self.registers.get_hl();
+                        self.registers.set_hl(hl.wrapping_add(1));
+                    }
                     _ => {
                         panic!("TODO: implement other targets")
                     }
