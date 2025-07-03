@@ -8,6 +8,7 @@ pub enum Instruction {
     LDH(LoadHTarget, LoadHSource),
     LDN16(LoadTypeN16),
     PUSH(PushTarget),
+    RL(RotateTarget),
     XOR(ArithmeticTarget, ArithmeticSource),
 }
 
@@ -73,6 +74,10 @@ pub enum LoadTypeN16 {
     HL,
 }
 
+pub enum RotateTarget {
+    C,
+}
+
 pub enum PushTarget {
     BC,
 }
@@ -88,6 +93,7 @@ impl Instruction {
 
     fn from_byte_prefixed(byte: u8) -> Option<Instruction> {
         match byte {
+            0x11 => Some(Instruction::RL(RotateTarget::C)),
             0x7c => Some(Instruction::BIT(7, BitSource::H)),
             _ =>
             /* TODO: Add mapping for rest of instructions */

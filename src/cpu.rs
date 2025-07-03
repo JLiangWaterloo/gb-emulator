@@ -193,6 +193,19 @@ impl CPU {
                     panic!("Unknown target.");
                 }
             },
+            Instruction::RL(target) => match target {
+                instructions::RotateTarget::C => {
+                    let highest_bit = self.registers.c & 0x80 != 0;
+                    self.registers.c <<= 1;
+                    if self.flags_register.carry {
+                        self.registers.c |= 0x1;
+                    }
+                    self.flags_register.zero = self.registers.c == 0;
+                    self.flags_register.subtract = false;
+                    self.flags_register.half_carry = false;
+                    self.flags_register.carry = highest_bit;
+                }
+            },
             Instruction::XOR(target, source) => {
                 let source_value = match source {
                     instructions::ArithmeticSource::A => self.registers.a,
