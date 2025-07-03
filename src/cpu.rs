@@ -182,6 +182,17 @@ impl CPU {
                     }
                 }
             }
+            Instruction::POP(target) => match target {
+                instructions::PopTarget::BC => {
+                    self.registers.c = self.bus.read_byte(self.sp);
+                    self.sp = self.sp.wrapping_add(1);
+                    self.registers.b = self.bus.read_byte(self.sp);
+                    self.sp = self.sp.wrapping_add(1);
+                }
+                _ => {
+                    panic!("Unknown target.");
+                }
+            },
             Instruction::PUSH(target) => match target {
                 instructions::PushTarget::BC => {
                     self.sp = self.sp.wrapping_sub(1);
