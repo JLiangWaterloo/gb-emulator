@@ -63,6 +63,7 @@ pub enum LoadTarget {
     HL_,
     HLD,
     HLI,
+    N16_,
 }
 
 pub enum LoadSource {
@@ -147,6 +148,7 @@ impl Instruction {
             0xcd => Some(Instruction::CALL),
             0xe0 => Some(Instruction::LDH(LoadHTarget::N8_, LoadHSource::A)),
             0xe2 => Some(Instruction::LDH(LoadHTarget::C_, LoadHSource::A)),
+            0xea => Some(Instruction::LD(LoadTarget::N16_, LoadSource::A)),
             0xfe => Some(Instruction::CP),
             _ =>
             /* TODO: Add mapping for rest of instructions */

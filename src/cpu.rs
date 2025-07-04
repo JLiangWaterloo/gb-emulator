@@ -171,6 +171,16 @@ impl CPU {
                         println!("Setting {:x}={}", hl, source_value);
                         self.registers.set_hl(hl + 1);
                     }
+                    instructions::LoadTarget::N16_ => {
+                        let least_significant_byte = self.bus.read_byte(self.pc) as u16;
+                        let most_significant_byte = self.bus.read_byte(self.pc + 1) as u16;
+                        let value = (most_significant_byte << 8) | least_significant_byte;
+
+                        self.pc = self.pc.wrapping_add(2);
+
+                        println!("Setting {:x}={}", value, source_value);
+                        self.bus.write_byte(value, source_value);
+                    }
                     _ => {
                         panic!("TODO: implement other targets")
                     }
