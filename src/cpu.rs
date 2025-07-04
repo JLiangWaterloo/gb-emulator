@@ -103,6 +103,12 @@ impl CPU {
             }
             Instruction::INC(target) => {
                 match target {
+                    instructions::IncTarget::B => {
+                        self.registers.b = self.registers.b.wrapping_add(1);
+                        self.flags_register.zero = self.registers.b == 0;
+                        self.flags_register.subtract = false;
+                        self.flags_register.half_carry = self.registers.b == 0x10;
+                    }
                     instructions::IncTarget::C => {
                         self.registers.c = self.registers.c.wrapping_add(1);
                         self.flags_register.zero = self.registers.c == 0;

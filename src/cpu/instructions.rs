@@ -49,6 +49,7 @@ pub enum DecrementTarget {
 }
 
 pub enum IncTarget {
+    B,
     C,
     DE,
     HL,
@@ -130,6 +131,7 @@ impl Instruction {
 
     fn from_byte_not_prefixed(byte: u8) -> Option<Instruction> {
         match byte {
+            0x4 => Some(Instruction::INC(IncTarget::B)),
             0x5 => Some(Instruction::DEC(DecrementTarget::B)),
             0x6 => Some(Instruction::LD(LoadTarget::B, LoadSource::N8)),
             0xc => Some(Instruction::INC(IncTarget::C)),
