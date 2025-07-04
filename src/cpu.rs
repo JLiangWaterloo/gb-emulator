@@ -227,6 +227,15 @@ impl CPU {
                     panic!("Unknown target.");
                 }
             },
+            Instruction::RET => {
+                let least_significant_byte = self.bus.read_byte(self.sp) as u16;
+                self.sp = self.sp.wrapping_add(1);
+                let most_significant_byte = self.bus.read_byte(self.sp) as u16;
+                self.sp = self.sp.wrapping_add(1);
+                self.pc = (most_significant_byte << 8) | least_significant_byte;
+
+                println!("Returning 0x{:x}", self.pc);
+            },
             Instruction::RL(target) => match target {
                 instructions::RotateTarget::C => {
                     let highest_bit = self.registers.c & 0x80 != 0;
