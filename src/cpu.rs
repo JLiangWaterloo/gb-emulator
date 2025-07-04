@@ -124,6 +124,7 @@ impl CPU {
             }
             Instruction::JR(condition) => {
                 let condition_value = match condition {
+                    instructions::JumpCondition::Always => true,
                     instructions::JumpCondition::NZ => !self.flags_register.zero,
                     instructions::JumpCondition::Z => self.flags_register.zero,
                     _ => {
