@@ -53,14 +53,16 @@ impl CPU {
                 self.flags_register.half_carry = true;
             }
             Instruction::CALL => {
+                let least_significant_byte = self.bus.read_byte(self.pc) as u16;
+                let most_significant_byte = self.bus.read_byte(self.pc + 1) as u16;
+                let value = (most_significant_byte << 8) | least_significant_byte;
+
+                self.pc = self.pc.wrapping_add(2);
+
                 self.sp = self.sp.wrapping_sub(1);
                 self.bus.write_byte(self.sp, (self.pc >> 8) as u8);
                 self.sp = self.sp.wrapping_sub(1);
                 self.bus.write_byte(self.sp, (self.pc & 0xff) as u8);
-
-                let least_significant_byte = self.bus.read_byte(self.pc) as u16;
-                let most_significant_byte = self.bus.read_byte(self.pc + 1) as u16;
-                let value = (most_significant_byte << 8) | least_significant_byte;
 
                 println!("Calling 0x{:x}", value);
                 self.pc = value;
