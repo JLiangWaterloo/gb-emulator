@@ -78,6 +78,12 @@ impl CPU {
             }
             Instruction::DEC(target) => {
                 match target {
+                    instructions::DecrementTarget::A => {
+                        self.flags_register.half_carry = self.registers.a == 0;
+                        self.registers.a = self.registers.a.wrapping_sub(1);
+                        self.flags_register.zero = self.registers.a == 0;
+                        self.flags_register.subtract = true;
+                    }
                     instructions::DecrementTarget::B => {
                         self.flags_register.half_carry = self.registers.b == 0;
                         self.registers.b = self.registers.b.wrapping_sub(1);
