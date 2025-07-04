@@ -225,11 +225,20 @@ impl CPU {
             Instruction::LDH(target, source) => {
                 let source_value = match source {
                     instructions::LoadHSource::A => self.registers.a,
+                    instructions::LoadHSource::N8_ => {
+                        let n8 = self.bus.read_byte(self.pc);
+                        self.pc = self.pc.wrapping_add(1);
+                        self.bus.read_byte(0xff00 + (n8 as u16))
+                    }
                     _ => {
                         panic!("TODO: implement other sources")
                     }
                 };
                 match target {
+                    instructions::LoadHTarget::A => {
+                        println!("LDH a={}", source_value);
+                        self.registers.a = source_value;
+                    }
                     instructions::LoadHTarget::C_ => {
                         println!("LDH 0xff{:x}={}", self.registers.c, source_value);
                         self.bus
