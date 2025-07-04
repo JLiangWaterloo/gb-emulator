@@ -3,7 +3,7 @@ pub struct Registers {
     pub b: u8,
     pub c: u8,
     d: u8,
-    e: u8,
+    pub e: u8,
     f: u8,
     pub h: u8,
     l: u8,

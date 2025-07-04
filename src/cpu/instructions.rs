@@ -66,6 +66,7 @@ pub enum LoadTarget {
 
 pub enum LoadSource {
     A,
+    E,
     DE_,
     N8,
 }
@@ -137,6 +138,7 @@ impl Instruction {
             0x3e => Some(Instruction::LD(LoadTarget::A, LoadSource::N8)),
             0x4f => Some(Instruction::LD(LoadTarget::C, LoadSource::A)),
             0x77 => Some(Instruction::LD(LoadTarget::HL_, LoadSource::A)),
+            0x7b => Some(Instruction::LD(LoadTarget::A, LoadSource::E)),
             0xAF => Some(Instruction::XOR(ArithmeticTarget::A, ArithmeticSource::A)),
             0xc1 => Some(Instruction::POP(PopTarget::BC)),
             0xc5 => Some(Instruction::PUSH(PushTarget::BC)),
