@@ -45,6 +45,7 @@ pub enum BitSource {
 pub enum DecrementTarget {
     A,
     B,
+    C,
 }
 
 pub enum IncTarget {
@@ -128,6 +129,7 @@ impl Instruction {
             0x5 => Some(Instruction::DEC(DecrementTarget::B)),
             0x6 => Some(Instruction::LD(LoadTarget::B, LoadSource::N8)),
             0xc => Some(Instruction::INC(IncTarget::C)),
+            0xd => Some(Instruction::DEC(DecrementTarget::C)),
             0xe => Some(Instruction::LD(LoadTarget::C, LoadSource::N8)),
             0x11 => Some(Instruction::LDN16(LoadTypeN16::DE)),
             0x13 => Some(Instruction::INC(IncTarget::DE)),
