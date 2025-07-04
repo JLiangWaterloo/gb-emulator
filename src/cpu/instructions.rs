@@ -55,6 +55,7 @@ pub enum IncTarget {
 
 pub enum JumpCondition {
     NZ,
+    Z,
 }
 
 pub enum LoadTarget {
@@ -136,6 +137,7 @@ impl Instruction {
             0x21 => Some(Instruction::LDN16(LoadTypeN16::HL)),
             0x22 => Some(Instruction::LD(LoadTarget::HLI, LoadSource::A)),
             0x23 => Some(Instruction::INC(IncTarget::HL)),
+            0x28 => Some(Instruction::JR(JumpCondition::Z)),
             0x31 => Some(Instruction::LDN16(LoadTypeN16::SP)),
             0x32 => Some(Instruction::LD(LoadTarget::HLD, LoadSource::A)),
             0x3d => Some(Instruction::DEC(DecrementTarget::A)),

@@ -119,6 +119,7 @@ impl CPU {
             Instruction::JR(condition) => {
                 let condition_value = match condition {
                     instructions::JumpCondition::NZ => !self.flags_register.zero,
+                    instructions::JumpCondition::Z => self.flags_register.zero,
                     _ => {
                         panic!("TODO: implement other sources")
                     }
