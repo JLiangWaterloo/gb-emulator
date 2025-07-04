@@ -47,6 +47,7 @@ pub enum DecrementTarget {
 
 pub enum IncTarget {
     C,
+    DE,
     HL,
 }
 
@@ -124,6 +125,7 @@ impl Instruction {
             0xc => Some(Instruction::INC(IncTarget::C)),
             0xe => Some(Instruction::LD(LoadTarget::C, LoadSource::N8)),
             0x11 => Some(Instruction::LDN16(LoadTypeN16::DE)),
+            0x13 => Some(Instruction::INC(IncTarget::DE)),
             0x17 => Some(Instruction::RLA),
             0x1a => Some(Instruction::LD(LoadTarget::A, LoadSource::DE_)),
             0x20 => Some(Instruction::JR(JumpCondition::NZ)),

@@ -88,6 +88,10 @@ impl CPU {
                         self.flags_register.subtract = false;
                         self.flags_register.half_carry = self.registers.c == 0x10;
                     }
+                    instructions::IncTarget::DE => {
+                        let de = self.registers.get_de();
+                        self.registers.set_de(de.wrapping_add(1));
+                    }
                     instructions::IncTarget::HL => {
                         let hl = self.registers.get_hl();
                         self.registers.set_hl(hl.wrapping_add(1));
@@ -237,7 +241,7 @@ impl CPU {
                 self.pc = (most_significant_byte << 8) | least_significant_byte;
 
                 println!("Returning 0x{:x}", self.pc);
-            },
+            }
             Instruction::RL(target) => match target {
                 instructions::RotateTarget::C => {
                     let highest_bit = self.registers.c & 0x80 != 0;
