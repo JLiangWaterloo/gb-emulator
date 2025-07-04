@@ -6,7 +6,7 @@ pub struct Registers {
     pub e: u8,
     f: u8,
     pub h: u8,
-    l: u8,
+    pub l: u8,
 }
 
 impl Registers {
