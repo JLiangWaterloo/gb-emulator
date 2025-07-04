@@ -67,6 +67,15 @@ impl CPU {
                 println!("Calling 0x{:x}", value);
                 self.pc = value;
             }
+            Instruction::CP => {
+                let n8 = self.bus.read_byte(self.pc);
+                self.pc = self.pc.wrapping_add(1);
+
+                self.flags_register.zero = self.registers.a == n8;
+                self.flags_register.subtract = true;
+                self.flags_register.half_carry = (self.registers.a & 0xf) < (n8 & 0xf);
+                self.flags_register.carry = self.registers.a < n8;
+            }
             Instruction::DEC(target) => {
                 match target {
                     instructions::DecrementTarget::B => {

@@ -2,6 +2,7 @@ pub enum Instruction {
     ADD(ArithmeticTarget),
     BIT(u8, BitSource),
     CALL,
+    CP,
     DEC(DecrementTarget),
     INC(IncTarget),
     JR(JumpCondition),
@@ -146,6 +147,7 @@ impl Instruction {
             0xcd => Some(Instruction::CALL),
             0xe0 => Some(Instruction::LDH(LoadHTarget::N8_, LoadHSource::A)),
             0xe2 => Some(Instruction::LDH(LoadHTarget::C_, LoadHSource::A)),
+            0xfe => Some(Instruction::CP),
             _ =>
             /* TODO: Add mapping for rest of instructions */
             {
