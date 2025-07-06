@@ -111,6 +111,12 @@ impl CPU {
                         self.flags_register.zero = self.registers.c == 0;
                         self.flags_register.subtract = true;
                     }
+                    instructions::DecrementTarget::E => {
+                        self.flags_register.half_carry = self.registers.e == 0;
+                        self.registers.e = self.registers.e.wrapping_sub(1);
+                        self.flags_register.zero = self.registers.e == 0;
+                        self.flags_register.subtract = true;
+                    }
                     _ => {
                         panic!("TODO: implement other targets")
                     }
