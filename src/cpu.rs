@@ -82,14 +82,23 @@ impl CPU {
                 println!("Calling 0x{:x}", value);
                 self.pc = value;
             }
-            Instruction::CP => {
-                let n8 = self.bus.read_byte(self.pc);
-                self.pc = self.pc.wrapping_add(1);
+            Instruction::CP(source) => {
+                let source_value = match source {
+                    instructions::CompareSource::N8 => {
+                        let old_pc = self.pc;
+                        self.pc = self.pc.wrapping_add(1);
+                        self.bus.read_byte(old_pc)
+                    }
+                    instructions::CompareSource::HL_ => {
+                        let hl = self.registers.get_hl();
+                        self.bus.read_byte(hl)
+                    }
+                };
 
-                self.flags_register.zero = self.registers.a == n8;
+                self.flags_register.zero = self.registers.a == source_value;
                 self.flags_register.subtract = true;
-                self.flags_register.half_carry = (self.registers.a & 0xf) < (n8 & 0xf);
-                self.flags_register.carry = self.registers.a < n8;
+                self.flags_register.half_carry = (self.registers.a & 0xf) < (source_value & 0xf);
+                self.flags_register.carry = self.registers.a < source_value;
             }
             Instruction::DEC(target) => {
                 match target {

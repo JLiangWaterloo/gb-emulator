@@ -2,7 +2,7 @@ pub enum Instruction {
     ADD(ArithmeticTarget),
     BIT(u8, BitSource),
     CALL,
-    CP,
+    CP(CompareSource),
     DEC(DecrementTarget),
     INC(IncTarget),
     JR(JumpCondition),
@@ -41,6 +41,11 @@ pub enum ArithmeticSource {
 
 pub enum BitSource {
     H,
+}
+
+pub enum CompareSource {
+    HL_,
+    N8,
 }
 
 pub enum DecrementTarget {
@@ -173,6 +178,7 @@ impl Instruction {
             0x7c => Some(Instruction::LD(LoadTarget::A, LoadSource::H)),
             0x90 => Some(Instruction::SUB(ArithmeticSource::B)),
             0xAF => Some(Instruction::XOR(ArithmeticTarget::A, ArithmeticSource::A)),
+            0xbe => Some(Instruction::CP(CompareSource::HL_)),
             0xc1 => Some(Instruction::POP(PopTarget::BC)),
             0xc5 => Some(Instruction::PUSH(PushTarget::BC)),
             0xc9 => Some(Instruction::RET),
@@ -181,7 +187,7 @@ impl Instruction {
             0xe2 => Some(Instruction::LDH(LoadHTarget::C_, LoadHSource::A)),
             0xea => Some(Instruction::LD(LoadTarget::N16_, LoadSource::A)),
             0xf0 => Some(Instruction::LDH(LoadHTarget::A, LoadHSource::N8_)),
-            0xfe => Some(Instruction::CP),
+            0xfe => Some(Instruction::CP(CompareSource::N8)),
             _ =>
             /* TODO: Add mapping for rest of instructions */
             {
