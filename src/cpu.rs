@@ -136,6 +136,12 @@ impl CPU {
                         self.flags_register.subtract = false;
                         self.flags_register.half_carry = self.registers.c == 0x10;
                     }
+                    instructions::IncTarget::H => {
+                        self.registers.h = self.registers.h.wrapping_add(1);
+                        self.flags_register.zero = self.registers.h == 0;
+                        self.flags_register.subtract = false;
+                        self.flags_register.half_carry = self.registers.h == 0x10;
+                    }
                     instructions::IncTarget::DE => {
                         let de = self.registers.get_de();
                         self.registers.set_de(de.wrapping_add(1));
