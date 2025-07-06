@@ -14,6 +14,9 @@ pub struct CPU {
     pc: u16,
     flags_register: FlagsRegister,
     bus: MemoryBus,
+
+    cycles: u32,
+    last_ly_update: u32,
 }
 
 impl CPU {
@@ -37,6 +40,18 @@ impl CPU {
             );
             panic!("Unknown instruction found for: {}", description)
         };
+
+        self.cycles += 1;
+
+        if (self.last_ly_update + 114 < self.cycles) {
+            let mut ly = self.bus.read_ly();
+            ly += 1;
+            if ly > 154 {
+                ly = 0;
+            }
+            self.bus.write_ly(ly);
+            self.last_ly_update = self.cycles;
+        }
     }
 
     fn execute(&mut self, instruction: Instruction) {
@@ -362,6 +377,9 @@ impl Default for CPU {
             sp: 0,
             pc: 0,
             bus: MemoryBus::default(),
+
+            cycles: 0,
+            last_ly_update: 0,
         }
     }
 }

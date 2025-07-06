@@ -24,7 +24,7 @@ fn main() {
 
     cpu.load_bootstrap(&DMG_BOOT);
 
-    for _i in 1..30000 {
+    for _i in 1..40000 {
         cpu.step();
     }
 }

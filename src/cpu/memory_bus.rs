@@ -20,6 +20,14 @@ impl MemoryBus {
             self.memory[address as usize + i] = value[i as usize];
         }
     }
+
+    pub fn read_ly(&self) -> u8 {
+        self.memory[0xff44]
+    }
+
+    pub fn write_ly(&mut self, value: u8) {
+        self.memory[0xff44] = value;
+    }
 }
 
 impl Default for MemoryBus {
