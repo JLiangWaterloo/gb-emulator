@@ -43,7 +43,7 @@ impl CPU {
 
         self.cycles += 1;
 
-        if (self.last_ly_update + 114 < self.cycles) {
+        if self.last_ly_update + 114 < self.cycles {
             let mut ly = self.bus.read_ly();
             ly += 1;
             if ly > 154 {
