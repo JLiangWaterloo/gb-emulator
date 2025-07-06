@@ -192,6 +192,7 @@ impl CPU {
             Instruction::LD(target, source) => {
                 let source_value = match source {
                     instructions::LoadSource::A => self.registers.a,
+                    instructions::LoadSource::B => self.registers.b,
                     instructions::LoadSource::E => self.registers.e,
                     instructions::LoadSource::H => self.registers.h,
                     instructions::LoadSource::L => self.registers.l,
