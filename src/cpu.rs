@@ -410,6 +410,10 @@ impl CPU {
     pub fn load_bootstrap(&mut self, bootstrap_bin: &[u8]) {
         self.bus.write_array(0, bootstrap_bin);
     }
+
+    pub fn load_cartridge(&mut self, cartridge_bin: &[u8]) {
+        self.bus.write_array(0, cartridge_bin);
+    }
 }
 
 impl Default for CPU {

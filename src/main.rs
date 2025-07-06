@@ -19,12 +19,18 @@ const DMG_BOOT: [u8; 256] = [
     0x6, 0x19, 0x78, 0x86, 0x23, 0x5, 0x20, 0xfb, 0x86, 0x20, 0xfe, 0x3e, 0x1, 0xe0, 0x50,
 ];
 
-fn main() {
+fn main() -> std::io::Result<()> {
+    let args: Vec<String> = std::env::args().collect();
+    let contents = std::fs::read(&args[1])?;
+
     let mut cpu = cpu::CPU::default();
 
+    cpu.load_cartridge(&contents[0..65535]);
     cpu.load_bootstrap(&DMG_BOOT);
 
     for _i in 1..10000000 {
         cpu.step();
     }
+
+    Ok(())
 }
