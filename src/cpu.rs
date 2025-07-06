@@ -178,6 +178,7 @@ impl CPU {
                 let source_value = match source {
                     instructions::LoadSource::A => self.registers.a,
                     instructions::LoadSource::E => self.registers.e,
+                    instructions::LoadSource::H => self.registers.h,
                     instructions::LoadSource::DE_ => self.bus.read_byte(self.registers.get_de()),
                     instructions::LoadSource::N8 => {
                         let old_pc = self.pc;
