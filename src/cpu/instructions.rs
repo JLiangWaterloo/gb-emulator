@@ -88,6 +88,7 @@ pub enum LoadSource {
     A,
     E,
     H,
+    L,
     DE_,
     N8,
 }
@@ -176,6 +177,7 @@ impl Instruction {
             0x77 => Some(Instruction::LD(LoadTarget::HL_, LoadSource::A)),
             0x7b => Some(Instruction::LD(LoadTarget::A, LoadSource::E)),
             0x7c => Some(Instruction::LD(LoadTarget::A, LoadSource::H)),
+            0x7d => Some(Instruction::LD(LoadTarget::A, LoadSource::L)),
             0x90 => Some(Instruction::SUB(ArithmeticSource::B)),
             0xAF => Some(Instruction::XOR(ArithmeticTarget::A, ArithmeticSource::A)),
             0xbe => Some(Instruction::CP(CompareSource::HL_)),
