@@ -359,6 +359,21 @@ impl CPU {
                 self.flags_register.half_carry = false;
                 self.flags_register.carry = highest_bit;
             }
+            Instruction::SUB(source) => {
+                let source_value = match source {
+                    instructions::ArithmeticSource::B => self.registers.b,
+                    _ => {
+                        panic!("TODO: implement other sources")
+                    }
+                };
+
+                let (diff, did_overflow) = self.registers.a.overflowing_sub(source_value);
+                self.flags_register.zero = diff == 0;
+                self.flags_register.subtract = true;
+                self.flags_register.carry = did_overflow;
+                self.flags_register.half_carry = (self.registers.a & 0x0F) > (source_value & 0x0F);
+                self.registers.a = diff;
+            }
             Instruction::XOR(target, source) => {
                 let source_value = match source {
                     instructions::ArithmeticSource::A => self.registers.a,

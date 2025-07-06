@@ -14,6 +14,7 @@ pub enum Instruction {
     RET,
     RL(RotateTarget),
     RLA,
+    SUB(ArithmeticSource),
     XOR(ArithmeticTarget, ArithmeticSource),
 }
 
@@ -167,6 +168,7 @@ impl Instruction {
             0x77 => Some(Instruction::LD(LoadTarget::HL_, LoadSource::A)),
             0x7b => Some(Instruction::LD(LoadTarget::A, LoadSource::E)),
             0x7c => Some(Instruction::LD(LoadTarget::A, LoadSource::H)),
+            0x90 => Some(Instruction::SUB(ArithmeticSource::B)),
             0xAF => Some(Instruction::XOR(ArithmeticTarget::A, ArithmeticSource::A)),
             0xc1 => Some(Instruction::POP(PopTarget::BC)),
             0xc5 => Some(Instruction::PUSH(PushTarget::BC)),
