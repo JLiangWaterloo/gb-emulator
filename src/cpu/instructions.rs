@@ -9,6 +9,7 @@ pub enum Instruction {
     LD(LoadTarget, LoadSource),
     LDH(LoadHTarget, LoadHSource),
     LDN16(LoadTypeN16),
+    NOP,
     POP(PopTarget),
     PUSH(PushTarget),
     RET,
@@ -147,6 +148,7 @@ impl Instruction {
 
     fn from_byte_not_prefixed(byte: u8) -> Option<Instruction> {
         match byte {
+            0x0 => Some(Instruction::NOP),
             0x4 => Some(Instruction::INC(IncTarget::B)),
             0x5 => Some(Instruction::DEC(DecrementTarget::B)),
             0x6 => Some(Instruction::LD(LoadTarget::B, LoadSource::N8)),

@@ -336,6 +336,7 @@ impl CPU {
                     }
                 }
             }
+            Instruction::NOP => {},
             Instruction::POP(target) => match target {
                 instructions::PopTarget::BC => {
                     self.registers.c = self.bus.read_byte(self.sp);
