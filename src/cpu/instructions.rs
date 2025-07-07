@@ -1,5 +1,5 @@
 pub enum Instruction {
-    ADD(ArithmeticTarget),
+    ADD(ArithmeticSource),
     BIT(u8, BitSource),
     CALL,
     CP(CompareSource),
@@ -36,6 +36,7 @@ pub enum ArithmeticSource {
     E,
     H,
     L,
+    HL_,
     HLI,
 }
 
@@ -180,6 +181,7 @@ impl Instruction {
             0x7b => Some(Instruction::LD(LoadTarget::A, LoadSource::E)),
             0x7c => Some(Instruction::LD(LoadTarget::A, LoadSource::H)),
             0x7d => Some(Instruction::LD(LoadTarget::A, LoadSource::L)),
+            0x86 => Some(Instruction::ADD(ArithmeticSource::HL_)),
             0x90 => Some(Instruction::SUB(ArithmeticSource::B)),
             0xAF => Some(Instruction::XOR(ArithmeticTarget::A, ArithmeticSource::A)),
             0xbe => Some(Instruction::CP(CompareSource::HL_)),

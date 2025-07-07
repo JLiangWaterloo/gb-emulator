@@ -56,6 +56,21 @@ impl CPU {
 
     fn execute(&mut self, instruction: Instruction) {
         match instruction {
+            Instruction::ADD(source) => {
+                let source_value = match source {
+                    instructions::ArithmeticSource::HL_ => self.bus.read_byte(self.registers.get_hl()),
+                    _ => {
+                        panic!("TODO: implement other sources")
+                    }
+                };
+
+                let (sum, did_overflow) = self.registers.a.overflowing_add(source_value);
+                self.flags_register.zero = sum == 0;
+                self.flags_register.subtract = false;
+                self.flags_register.carry = did_overflow;
+                self.flags_register.half_carry = (self.registers.a & 0x0f) + (source_value & 0x0f) > 0xf;
+                self.registers.a = sum;
+            }
             Instruction::BIT(number, source) => {
                 let source_value = match source {
                     instructions::BitSource::H => self.registers.h,
